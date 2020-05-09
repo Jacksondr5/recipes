@@ -1,6 +1,14 @@
 import RecipeStep from "./RecipeStep";
+import UuidValidate from "uuid-validate";
 
 describe("RecipeStep", () => {
+  test("Constructor should create UUID", () => {
+    //Act
+    const recipeStep = new RecipeStep("title");
+
+    //Assert
+    UuidValidate(recipeStep.id, 4);
+  });
   test("Should throw error is title is whitespace", () => {
     //Assemble
     const recipeStep = new RecipeStep("title");
