@@ -4,7 +4,7 @@ describe("Ingredient", () => {
   test("Constructor should use default values", () => {
     //Assemble
     const expectedNotes = "";
-    const expectedQuantity = 0;
+    const expectedQuantity = "";
 
     //Act
     const actual = new Ingredient("test");
@@ -33,18 +33,9 @@ describe("Ingredient", () => {
     expect(ingredient.name).toBe(newName);
   });
 
-  test("Should throw error if quantity is < 0", () => {
-    //Assemble
-    const ingredient = new Ingredient("test");
-
-    //Act
-    expect(() => new Ingredient("name", -1)).toThrow();
-    expect(() => (ingredient.quantity = -1)).toThrow();
-  });
-
   test("Should set quantity is value is valid", () => {
     const ingredient = new Ingredient("name");
-    const newQuantity = 5;
+    const newQuantity = "5";
 
     //Act
     expect(() => (ingredient.quantity = newQuantity)).not.toThrow();
