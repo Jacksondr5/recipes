@@ -1,30 +1,34 @@
-import RecipeStep from "./RecipeStep";
-import UuidValidate from "uuid-validate";
+import { RecipeStep, ValidateRecipeStep } from "./RecipeStep";
+import { v4 as uuidv4 } from "uuid";
 
-describe("RecipeStep", () => {
-  test("Constructor should create UUID", () => {
+describe("ValidateRecipeStep", () => {
+  test("Should return error if title is empty", () => {
+    //Assemble
+    const recipeStep: RecipeStep = {
+      details: "",
+      id: uuidv4(),
+      title: "",
+    };
+
     //Act
-    const recipeStep = new RecipeStep("title");
+    const result = ValidateRecipeStep(recipeStep);
 
     //Assert
-    UuidValidate(recipeStep.id, 4);
-  });
-  test("Should throw error is title is whitespace", () => {
-    //Assemble
-    const recipeStep = new RecipeStep("title");
-
-    //Act
-    expect(() => new RecipeStep("")).toThrow();
-    expect(() => (recipeStep.title = "")).toThrow();
+    expect(result.error?.message).toContain("Step Title");
   });
 
-  test("Should set title if value is valid", () => {
+  test("Should return error if id is not valid", () => {
     //Assemble
-    const recipeStep = new RecipeStep("title");
-    const newTitle = "valid";
+    const recipeStep: RecipeStep = {
+      details: "",
+      id: "not a uuid V4",
+      title: "",
+    };
 
     //Act
-    expect(() => (recipeStep.title = newTitle)).not.toThrow();
-    expect(recipeStep.title).toBe(newTitle);
+    const result = ValidateRecipeStep(recipeStep);
+
+    //Assert
+    expect(result.error?.message).toContain("Step ID");
   });
 });

@@ -1,7 +1,7 @@
 import Recipe from "./Recipe";
-import RecipeStep from "./RecipeStep";
-import { Edge } from "graphlib";
-import Ingredient from "./Ingredient";
+import { RecipeStep } from "./RecipeStep";
+import { v4 as uuidv4 } from "uuid";
+import { Ingredient } from "./Ingredient";
 
 describe("Recipe", () => {
   test("Constructor should set default values", () => {
@@ -15,7 +15,7 @@ describe("Recipe", () => {
   describe("AddRecipeStep", () => {
     test("Should add RecipeStep to recipe", () => {
       //Assemble
-      const step = new RecipeStep("title");
+      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
       const recipe = new Recipe();
 
       //Act
@@ -26,7 +26,7 @@ describe("Recipe", () => {
     });
     test("Should throw Error if linked step does not exist", () => {
       //Assemble
-      const step = new RecipeStep("title");
+      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
       const recipe = new Recipe();
 
       //Act
@@ -36,9 +36,13 @@ describe("Recipe", () => {
 
     test("Should add predecessor step", () => {
       //Assemble
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       const recipe = new Recipe();
-      const target = new RecipeStep("target");
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
       recipe.addRecipeStep(predecessor);
 
       //Act
@@ -50,9 +54,13 @@ describe("Recipe", () => {
 
     test("Should add successor step", () => {
       //Assemble
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       const recipe = new Recipe();
-      const target = new RecipeStep("target");
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
       recipe.addRecipeStep(successor);
 
       //Act
@@ -66,11 +74,19 @@ describe("Recipe", () => {
     test("Should add step", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(successor, [predecessor.id]);
-      const target = new RecipeStep("target");
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
 
       //Act
       recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
@@ -81,11 +97,19 @@ describe("Recipe", () => {
     test("Should remove existing edge", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(successor, [predecessor.id]);
-      const target = new RecipeStep("target");
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
 
       //Act
       recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
@@ -95,11 +119,19 @@ describe("Recipe", () => {
     });
     test("Should create edges to previously joined steps", () => {
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(successor, [predecessor.id]);
-      const target = new RecipeStep("target");
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
 
       //Act
       recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
@@ -111,7 +143,7 @@ describe("Recipe", () => {
     test("Should throw error if edge does not exist", () => {
       //Assemble
       const recipe = new Recipe();
-      const step = new RecipeStep("step");
+      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
 
       //Act
       expect(() =>
@@ -123,10 +155,18 @@ describe("Recipe", () => {
     test("Should create edge between existing steps", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
-      recipe.addRecipeStep(successor);
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
+      recipe.addRecipeStep(successor, [predecessor.id]);
 
       //Act
       recipe.linkSteps(predecessor.id, successor.id);
@@ -139,10 +179,18 @@ describe("Recipe", () => {
     test("Should throw error if step does not exist", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
-      recipe.addRecipeStep(successor);
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
+      recipe.addRecipeStep(successor, [predecessor.id]);
 
       //Act
       recipe.linkSteps(predecessor.id, successor.id);
@@ -158,9 +206,17 @@ describe("Recipe", () => {
     test("Should remove edge between existing steps", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(successor, [predecessor.id]);
 
       //Act
@@ -172,7 +228,11 @@ describe("Recipe", () => {
     test("Should throw error if step does not exist", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
 
       //Act
@@ -183,9 +243,17 @@ describe("Recipe", () => {
     test("Should throw error if edge does not exist", () => {
       //Assemble
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
       recipe.addRecipeStep(predecessor);
-      const successor = new RecipeStep("successor");
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(successor);
 
       //Act
@@ -197,7 +265,7 @@ describe("Recipe", () => {
   describe("RemoveRecipeStep", () => {
     test("Should remove RecipeStep", () => {
       //Assemble
-      const step = new RecipeStep("title");
+      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
       const recipe = new Recipe();
       recipe.addRecipeStep(step);
 
@@ -211,9 +279,17 @@ describe("Recipe", () => {
       //Assemble
 
       const recipe = new Recipe();
-      const predecessor = new RecipeStep("predecessor");
-      const target = new RecipeStep("target");
-      const successor = new RecipeStep("successor");
+      const predecessor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "predecessor",
+      };
+      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
+      const successor: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "successor",
+      };
       recipe.addRecipeStep(predecessor);
       recipe.addRecipeStep(target, [predecessor.id]);
       recipe.addRecipeStep(successor, [target.id]);
@@ -235,7 +311,11 @@ describe("Recipe", () => {
     test("Should add Ingredient", () => {
       //Assemble
       const recipe = new Recipe();
-      const ingredient = new Ingredient("ingredient");
+      const ingredient: Ingredient = {
+        name: "ingredient",
+        notes: "",
+        quantity: "",
+      };
 
       //Act
       recipe.addIngredient(ingredient);
@@ -245,7 +325,11 @@ describe("Recipe", () => {
     });
     test("Should throw error if ingredient already exists", () => {
       const recipe = new Recipe();
-      const ingredient = new Ingredient("ingredient");
+      const ingredient: Ingredient = {
+        name: "ingredient",
+        notes: "",
+        quantity: "",
+      };
       recipe.addIngredient(ingredient);
 
       //Act
@@ -256,7 +340,11 @@ describe("Recipe", () => {
     test("Should remove Ingredient", () => {
       //Assemble
       const recipe = new Recipe();
-      const ingredient = new Ingredient("ingredient");
+      const ingredient: Ingredient = {
+        name: "ingredient",
+        notes: "",
+        quantity: "",
+      };
       recipe.addIngredient(ingredient);
 
       //Act
@@ -277,9 +365,13 @@ describe("Recipe", () => {
     test("Should return JSON serialization", () => {
       //Assemble
       const recipe = new Recipe();
-      const ingredient = new Ingredient("ingredient");
+      const ingredient: Ingredient = {
+        name: "ingredient",
+        notes: "",
+        quantity: "",
+      };
       recipe.addIngredient(ingredient);
-      const step = new RecipeStep("step");
+      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
       recipe.addRecipeStep(step);
 
       //Act

@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import { Button } from "@material-ui/core";
+import RecipeBuilder from "./Components/RecipeBuilder";
+import Recipe from "./Core/Recipe";
+import Ingredient from "./Core/Ingredient";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  recipe: Recipe;
+  constructor(parameters) {
+    super(parameters);
+    this.recipe = new Recipe();
+  }
+
+  render() {
+    return (
+      <div>
+        <RecipeBuilder />
+      </div>
+    );
+  }
+
+  onButtonClick(params: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    this.recipe.addIngredient(new Ingredient("test"));
+  }
 }
 
 export default App;

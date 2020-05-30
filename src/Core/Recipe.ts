@@ -1,5 +1,5 @@
-import RecipeStep from "./RecipeStep";
-import Ingredient from "./Ingredient";
+import { RecipeStep } from "./RecipeStep";
+import { Ingredient } from "./Ingredient";
 import { Graph, json as GraphlibJson } from "graphlib";
 
 /**
