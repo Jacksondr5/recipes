@@ -3,8 +3,7 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-trigger:
-- master
+name: '0.1.$(Rev:.r)'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -15,6 +14,24 @@ steps:
     versionSpec: '12.x'
   displayName: 'Install Node.js'
 
+- task: SonarCloud
+  displayName: 'Prepare analysis configuration'
+  inputs:
+    SonarCloud: 'SonarCloud'
+    organization: 'jacksondr5'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'recipes'
+    cliProjectName: 'Recipes'
+    cliSources: 'src'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.tests=src
+      sonar.test.inclusions=**/testing/**,**/*.spec.ts
+      sonar.typescript.lcov.reportPaths=coverage/lcov.info
+
 - task: Npm@1
   inputs:
     command: 'ci'
@@ -23,11 +40,19 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    customCommand: 'build'
+    customCommand: 'run build'
   displayName: 'Build Project'
 
 - task: Npm@1
   inputs:
     command: 'custom'
-    customCommand: 'test'
+    customCommand: 'run test'
   displayName: 'Run Unit Tests'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud analysis'
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish results on build summary'
+  inputs:
+    pollingTimeoutSec: '300'
