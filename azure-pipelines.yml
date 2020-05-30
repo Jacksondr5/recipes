@@ -14,23 +14,14 @@ steps:
     versionSpec: '12.x'
   displayName: 'Install Node.js'
 
-- task: SonarCloud
+- task: SonarCloudPrepare@1
   displayName: 'Prepare analysis configuration'
   inputs:
     SonarCloud: 'SonarCloud'
     organization: 'jacksondr5'
     scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'recipes'
-    cliProjectName: 'Recipes'
-    cliSources: 'src'
-    extraProperties: |
-      # Additional properties that will be passed to the scanner, 
-      # Put one key=value per line, example:
-      # sonar.exclusions=**/*.bin
-      sonar.tests=src
-      sonar.test.inclusions=**/testing/**,**/*.spec.ts
-      sonar.typescript.lcov.reportPaths=coverage/lcov.info
+    configMode: 'file'
+    configFile: 'sonarcloud.properties'
 
 - task: Npm@1
   inputs:
