@@ -78,7 +78,9 @@ const getSelectItemStyle = (theme: Theme, itemIsSelected: boolean) => ({
     : theme.typography.fontWeightMedium,
 });
 
-const RecipeStepForm: React.SFC<RecipeStepFormProps> = (props) => {
+const RecipeStepForm: React.FunctionComponent<RecipeStepFormProps> = (
+  props
+) => {
   const classes = useStyles();
   const theme = useTheme();
   const onRecipeStepInfoChanged = (propName: string) => (

@@ -5,7 +5,7 @@ import { Graph, json as GraphlibJson, Edge } from "graphlib";
 /** Represents a recipe, including the ingredients and steps */
 export default class Recipe {
   private _ingredients: Ingredient[];
-  private _steps: Map<string, RecipeStep>;
+  private readonly _steps: Map<string, RecipeStep>;
   private _graph: Graph;
   constructor() {
     this._ingredients = [];
@@ -44,10 +44,13 @@ export default class Recipe {
   private checkStepsExist(nodeIds: string[]) {
     const fakeNodes: string[] = [];
     for (const id of nodeIds) {
-      if (!this._graph.hasNode(id)) fakeNodes.push(id);
+      if (!this._graph.hasNode(id)) {
+        fakeNodes.push(id);
+      }
     }
-    if (fakeNodes.length > 0)
+    if (fakeNodes.length > 0) {
       throw new Error(`Steps not found: ${fakeNodes.toString()}`);
+    }
   }
 
   /**
@@ -99,10 +102,11 @@ export default class Recipe {
    */
   public unlinkSteps(predecessorId: string, successorId: string) {
     this.checkStepsExist([predecessorId, successorId]);
-    if (!this._graph.hasEdge(predecessorId, successorId))
+    if (!this._graph.hasEdge(predecessorId, successorId)) {
       throw new Error(
         `Tried to unlink steps, could not find edge: predecessor ${predecessorId}, successor: ${successorId}`
       );
+    }
     this._graph.removeEdge(predecessorId, successorId);
   }
 
@@ -144,10 +148,11 @@ export default class Recipe {
    * @param ingredient Ingredient to be added
    */
   public addIngredient(ingredient: Ingredient) {
-    if (this._ingredients.some((x) => x.name === ingredient.name))
+    if (this._ingredients.some((x) => x.name === ingredient.name)) {
       throw new Error(
         `Tried to add ingredient, found that name "${ingredient.name}" already existed`
       );
+    }
     this._ingredients.push(ingredient);
   }
 
@@ -156,10 +161,11 @@ export default class Recipe {
    * @param ingredientName Ingredient to be removed
    */
   public removeIngredient(ingredientName: string) {
-    if (!this._ingredients.some((x) => x.name === ingredientName))
+    if (!this._ingredients.some((x) => x.name === ingredientName)) {
       throw new Error(
         `Tried to remove ingredient with name ${ingredientName}, but it does not exist`
       );
+    }
     const index = this._ingredients.findIndex((x) => x.name === ingredientName);
     this._ingredients.splice(index, 1);
   }

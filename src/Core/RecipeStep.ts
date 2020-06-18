@@ -24,9 +24,11 @@ export const ValidateRecipeStep = (
   recipeStep: RecipeStep
 ): RecipeStepValidation => {
   const retVal: RecipeStepValidation = {};
-  if (!UuidValidate(recipeStep.id, 4))
+  if (!UuidValidate(recipeStep.id, 4)) {
     retVal.id = RecipeStepValidationMessages.IdInvalid;
-  if (!recipeStep.title || recipeStep.title.trim() === "")
+  }
+  if (!recipeStep.title || recipeStep.title.trim() === "") {
     retVal.title = RecipeStepValidationMessages.TitleRequired;
+  }
   return retVal;
 };

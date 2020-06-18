@@ -14,8 +14,9 @@ export const ValidateIngredient = (
   ingredient: Ingredient
 ): IngredientValidation => {
   const retVal: IngredientValidation = {};
-  if (!ingredient.name || ingredient.name.trim() === "")
+  if (!ingredient.name || ingredient.name.trim() === "") {
     retVal.name = IngredientValidationMessages.NameRequired;
+  }
 
   return retVal;
 };

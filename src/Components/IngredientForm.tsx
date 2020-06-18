@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IngredientForm: React.SFC<IngredientFormProps> = (props) => {
+const IngredientForm: React.FunctionComponent<IngredientFormProps> = (
+  props
+) => {
   const classes = useStyles();
   const newIngredientChange = (propName: string) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

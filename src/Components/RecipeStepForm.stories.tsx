@@ -12,9 +12,9 @@ export default {
 
 const otherSteps: RecipeStep[] = [
   { details: "some details", id: uuid(), title: "First Step" },
-  { details: "some details", id: uuid(), title: "Predecessor Step 1" },
-  { details: "some details", id: uuid(), title: "Predecessor Step 2" },
-  { details: "some details", id: uuid(), title: "Successor Step 1" },
+  { details: "some other details", id: uuid(), title: "Predecessor Step 1" },
+  { details: "some more details", id: uuid(), title: "Predecessor Step 2" },
+  { details: "even more details", id: uuid(), title: "Successor Step 1" },
 ];
 
 export const recipeStepProps: RecipeStepFormProps = {
