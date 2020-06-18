@@ -1,4 +1,8 @@
-import { RecipeStep, ValidateRecipeStep } from "./RecipeStep";
+import {
+  RecipeStep,
+  ValidateRecipeStep,
+  RecipeStepValidationMessages,
+} from "./RecipeStep";
 import { v4 as uuidv4 } from "uuid";
 
 describe("ValidateRecipeStep", () => {
@@ -14,7 +18,7 @@ describe("ValidateRecipeStep", () => {
     const result = ValidateRecipeStep(recipeStep);
 
     //Assert
-    expect(result.error?.message).toContain("Step Title");
+    expect(result.title).toBe(RecipeStepValidationMessages.TitleRequired);
   });
 
   test("Should return error if id is not valid", () => {
@@ -29,6 +33,6 @@ describe("ValidateRecipeStep", () => {
     const result = ValidateRecipeStep(recipeStep);
 
     //Assert
-    expect(result.error?.message).toContain("Step ID");
+    expect(result.id).toBe(RecipeStepValidationMessages.IdInvalid);
   });
 });

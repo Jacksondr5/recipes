@@ -1,11 +1,10 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
-import RecipeBuilder from "./RecipeBuilder";
 import IngredientForm, { IngredientFormProps } from "./IngredientForm";
 
 export default {
-  component: RecipeBuilder,
-  title: "RecipeBuilder",
+  component: IngredientForm,
+  title: "IngredientForm",
   excludeStories: /.*Props$/,
 };
 
@@ -13,7 +12,7 @@ export const ingredientProps: IngredientFormProps = {
   buttonLabel: "Save",
   ingredient: { name: "name", notes: "notes", quantity: "4" },
   onNewIngredientChange: action("onIngredientAdd"),
-  onAddIngredientClick: action("onAddIngredientClick"),
+  onSaveIngredientClick: action("onAddIngredientClick"),
 };
 
 export const Default = () => <IngredientForm {...ingredientProps} />;

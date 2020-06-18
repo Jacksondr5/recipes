@@ -17,8 +17,6 @@ describe("ValidateIngredient", () => {
     const result = ValidateIngredient(ingredient);
 
     //Assert
-    expect(result.name?.message).toContain(
-      IngredientValidationMessages.NameRequired
-    );
+    expect(result.name).toBe(IngredientValidationMessages.NameRequired);
   });
 });

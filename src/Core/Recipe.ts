@@ -1,16 +1,16 @@
 import { RecipeStep } from "./RecipeStep";
 import { Ingredient } from "./Ingredient";
-import { Graph, json as GraphlibJson } from "graphlib";
+import { Graph, json as GraphlibJson, Edge } from "graphlib";
 
-/**
- * Represents a recipe, including the ingredients and steps
- */
+/** Represents a recipe, including the ingredients and steps */
 export default class Recipe {
   private _ingredients: Ingredient[];
-  private _steps: Graph;
+  private _steps: Map<string, RecipeStep>;
+  private _graph: Graph;
   constructor() {
     this._ingredients = [];
-    this._steps = new Graph();
+    this._steps = new Map<string, RecipeStep>();
+    this._graph = new Graph();
   }
 
   /**
@@ -27,7 +27,8 @@ export default class Recipe {
     this.checkStepsExist(predecessorIds);
     this.checkStepsExist(successorIds);
 
-    this._steps.setNode(step.id, step);
+    this._graph.setNode(step.id);
+    this._steps.set(step.id, step);
     for (const id of predecessorIds) {
       this.linkSteps(id, step.id);
     }
@@ -43,7 +44,7 @@ export default class Recipe {
   private checkStepsExist(nodeIds: string[]) {
     const fakeNodes: string[] = [];
     for (const id of nodeIds) {
-      if (!this._steps.hasNode(id)) fakeNodes.push(id);
+      if (!this._graph.hasNode(id)) fakeNodes.push(id);
     }
     if (fakeNodes.length > 0)
       throw new Error(`Steps not found: ${fakeNodes.toString()}`);
@@ -72,12 +73,13 @@ export default class Recipe {
   public removeRecipeStep(stepId: string) {
     this.checkStepsExist([stepId]);
 
-    for (const predecessorId of this._steps.predecessors(stepId) || []) {
-      for (const successorId of this._steps.successors(stepId) || []) {
-        this._steps.setEdge(predecessorId, successorId);
+    for (const predecessorId of this._graph.predecessors(stepId) || []) {
+      for (const successorId of this._graph.successors(stepId) || []) {
+        this._graph.setEdge(predecessorId, successorId);
       }
     }
-    this._steps.removeNode(stepId);
+    this._graph.removeNode(stepId);
+    this._steps.delete(stepId);
   }
 
   /**
@@ -87,7 +89,7 @@ export default class Recipe {
    */
   public linkSteps(predecessorId: string, successorId: string) {
     this.checkStepsExist([predecessorId, successorId]);
-    this._steps.setEdge(predecessorId, successorId);
+    this._graph.setEdge(predecessorId, successorId);
   }
 
   /**
@@ -97,11 +99,44 @@ export default class Recipe {
    */
   public unlinkSteps(predecessorId: string, successorId: string) {
     this.checkStepsExist([predecessorId, successorId]);
-    if (!this._steps.hasEdge(predecessorId, successorId))
+    if (!this._graph.hasEdge(predecessorId, successorId))
       throw new Error(
         `Tried to unlink steps, could not find edge: predecessor ${predecessorId}, successor: ${successorId}`
       );
-    this._steps.removeEdge(predecessorId, successorId);
+    this._graph.removeEdge(predecessorId, successorId);
+  }
+
+  /**
+   * Sets the predecessors and successors for a given step ID.
+   * This method will overwrite any existing data.
+   * @param stepId The step who's edges are being set
+   * @param newPredecessorIds The list of new predecessor ID's to set edges to
+   * @param newSuccessorIds The list of new successor ID's to set edges to
+   */
+  public setStepsLinks(
+    stepId: string,
+    newPredecessorIds: string[],
+    newSuccessorIds: string[]
+  ) {
+    const predecessorIds = (this._graph.inEdges(stepId) as Edge[]).map(
+      (x) => x.v
+    );
+    const successorIds = (this._graph.outEdges(stepId) as Edge[]).map(
+      (x) => x.w
+    );
+
+    newPredecessorIds
+      .filter((x) => !predecessorIds.includes(x))
+      .forEach((x) => this.linkSteps(x, stepId));
+    predecessorIds
+      .filter((x) => !newPredecessorIds.includes(x))
+      .forEach((x) => this.unlinkSteps(x, stepId));
+    newSuccessorIds
+      .filter((x) => !successorIds.includes(x))
+      .forEach((x) => this.linkSteps(stepId, x));
+    successorIds
+      .filter((x) => !newSuccessorIds.includes(x))
+      .forEach((x) => this.unlinkSteps(stepId, x));
   }
 
   /**
@@ -133,14 +168,18 @@ export default class Recipe {
     return this._ingredients;
   }
 
-  public get steps(): Graph {
+  public get graph(): Graph {
+    return this._graph;
+  }
+
+  public get steps(): Map<string, RecipeStep> {
     return this._steps;
   }
 
   public toJson(): string {
     const retVal: SerializableRecipe = {
       ingredients: this._ingredients,
-      steps: GraphlibJson.write(this._steps),
+      steps: GraphlibJson.write(this._graph),
     };
     return JSON.stringify(retVal);
   }
@@ -149,7 +188,7 @@ export default class Recipe {
     const thing = new Recipe();
     const value: SerializableRecipe = JSON.parse(json);
     thing._ingredients = value.ingredients;
-    thing._steps = GraphlibJson.read(value.steps);
+    thing._graph = GraphlibJson.read(value.steps);
     return thing;
   }
 }
