@@ -55,7 +55,7 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    customCommand: 'run chromatic --auto-accept-changes'
+    customCommand: 'run chromatic --auto-accept-changes --exit-zero-on-changes'
   displayName: 'Run UI Regression Tests - Master Branch'
   condition: and(succeeded(), eq(variables.isMaster, true))
 
