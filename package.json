@@ -29,7 +29,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "chromatic": "npx chromatic --project-token=bj77x5x2vkg"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +57,7 @@
     "@types/graphlib": "^2.1.5",
     "@types/uuid": "^7.0.3",
     "@types/uuid-validate": "0.0.1",
+    "chromatic": "^5.0.0",
     "react-test-renderer": "^16.13.1",
     "uuid-validate": "0.0.3"
   }

@@ -1,5 +1,7 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
+import { v4 as uuid } from "uuid";
+
 import IngredientForm, { IngredientFormProps } from "./IngredientForm";
 
 export default {
@@ -10,7 +12,7 @@ export default {
 
 export const ingredientProps: IngredientFormProps = {
   buttonLabel: "Save",
-  ingredient: { name: "name", notes: "notes", quantity: "4" },
+  ingredient: { id: uuid(), name: "name", notes: "notes", quantity: "4" },
   onNewIngredientChange: action("onIngredientAdd"),
   onSaveIngredientClick: action("onAddIngredientClick"),
 };
@@ -19,7 +21,7 @@ export const Default = () => <IngredientForm {...ingredientProps} />;
 export const Empty = () => (
   <IngredientForm
     {...ingredientProps}
-    ingredient={{ name: "", notes: "", quantity: "" }}
+    ingredient={{ id: uuid(), name: "", notes: "", quantity: "" }}
   />
 );
 export const NoName = () => (

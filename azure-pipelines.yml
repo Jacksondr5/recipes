@@ -10,6 +10,7 @@ pool:
 
 variables:
   CI: 'true'
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
 
 steps:
 - task: NodeTool@0
@@ -42,6 +43,20 @@ steps:
     command: 'custom'
     customCommand: 'run test'
   displayName: 'Run Unit Tests'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run chromatic --exit-zero-on-changes'
+  displayName: 'Run UI Regression Tests - Feature Branch'
+  condition: and(succeeded(), eq(variables.isMaster, false))
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run chromatic --auto-accept-changes'
+  displayName: 'Run UI Regression Tests - Master Branch'
+  condition: and(succeeded(), eq(variables.isMaster, true))
 
 - task: SonarCloudAnalyze@1
   displayName: 'Run SonarCloud analysis'
