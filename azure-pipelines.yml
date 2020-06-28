@@ -11,7 +11,7 @@ pool:
 variables:
   CI: 'true'
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-
+  CHROMATIC_PROJECT_TOKEN: 'bj77x5x2vkg'
 
 steps:
 - task: NodeTool@0
@@ -51,8 +51,6 @@ steps:
     customCommand: 'run chromatic --exit-zero-on-changes'
   displayName: 'Run UI Regression Tests - Feature Branch'
   condition: and(succeeded(), eq(variables.isMaster, false))
-  env:
-    CHROMATIC_PROJECT_TOKEN: $(CHROMATIC_PROJECT_TOKEN)
 
 - task: Npm@1
   inputs:
