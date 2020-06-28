@@ -15,7 +15,7 @@ export const ingredientListProps: IngredientListProps = {
       ingredient: {
         id: uuid(),
         name: "Apple",
-        notes: "Get gooddgfhjdfghjfdghjfdghj ones",
+        notes: "Get good ones",
         quantity: "3",
       },
       isChecked: false,
