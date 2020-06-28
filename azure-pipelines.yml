@@ -48,7 +48,7 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    customCommand: 'run chromatic --exit-zero-on-changes'
+    customCommand: 'run chromatic -- --exit-zero-on-changes'
   displayName: 'Run UI Regression Tests - Feature Branch'
   condition: and(succeeded(), eq(variables.isMaster, false))
 
