@@ -1,6 +1,5 @@
 import { RecipeStep } from "./RecipeStep";
 import { Ingredient } from "./Ingredient";
-import { Graph, json as GraphlibJson, Edge } from "graphlib";
 
 /** Represents a recipe, including the ingredients and steps */
 export default class Recipe {
