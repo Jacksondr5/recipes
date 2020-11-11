@@ -3,66 +3,66 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-name: '0.1$(Rev:.r)'
+name: "0.1$(Rev:.r)"
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 variables:
-  CI: 'true'
+  CI: "true"
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-  CHROMATIC_PROJECT_TOKEN: 'bj77x5x2vkg'
+  CHROMATIC_PROJECT_TOKEN: "bj77x5x2vkg"
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "14.x"
+    displayName: "Install Node.js"
 
-- task: SonarCloudPrepare@1
-  displayName: 'Prepare analysis configuration'
-  inputs:
-    SonarCloud: 'SonarCloud'
-    organization: 'jacksondr5'
-    scannerMode: 'CLI'
-    configMode: 'file'
-    configFile: 'sonarcloud.properties'
+  - task: SonarCloudPrepare@1
+    displayName: "Prepare analysis configuration"
+    inputs:
+      SonarCloud: "SonarCloud"
+      organization: "jacksondr5"
+      scannerMode: "CLI"
+      configMode: "file"
+      configFile: "sonarcloud.properties"
 
-- task: Npm@1
-  inputs:
-    command: 'ci'
-  displayName: 'Install Dependencies'
+  - task: Npm@1
+    inputs:
+      command: "ci"
+    displayName: "Install Dependencies"
 
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run build'
-  displayName: 'Build Project'
+  - task: Npm@1
+    inputs:
+      command: "custom"
+      customCommand: "run build"
+    displayName: "Build Project"
 
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run test'
-  displayName: 'Run Unit Tests'
+  - task: Npm@1
+    inputs:
+      command: "custom"
+      customCommand: "run test"
+    displayName: "Run Unit Tests"
 
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run chromatic -- --exit-zero-on-changes'
-  displayName: 'Run UI Regression Tests - Feature Branch'
-  condition: and(succeeded(), eq(variables.isMaster, false))
+  - task: Npm@1
+    inputs:
+      command: "custom"
+      customCommand: "run chromatic -- --exit-zero-on-changes"
+    displayName: "Run UI Regression Tests - Feature Branch"
+    condition: and(succeeded(), eq(variables.isMaster, false))
 
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run chromatic -- --auto-accept-changes'
-  displayName: 'Run UI Regression Tests - Master Branch'
-  condition: and(succeeded(), eq(variables.isMaster, true))
+  - task: Npm@1
+    inputs:
+      command: "custom"
+      customCommand: "run chromatic -- --auto-accept-changes"
+    displayName: "Run UI Regression Tests - Master Branch"
+    condition: and(succeeded(), eq(variables.isMaster, true))
 
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud analysis'
+  - task: SonarCloudAnalyze@1
+    displayName: "Run SonarCloud analysis"
 
-- task: SonarCloudPublish@1
-  displayName: 'Publish results on build summary'
-  inputs:
-    pollingTimeoutSec: '300'
+  - task: SonarCloudPublish@1
+    displayName: "Publish results on build summary"
+    inputs:
+      pollingTimeoutSec: "300"
