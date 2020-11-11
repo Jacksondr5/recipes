@@ -10,8 +10,7 @@ describe("Recipe", () => {
 
     //Assert
     expect(actual.ingredients).toHaveLength(0);
-    expect(actual.graph.nodeCount()).toBe(0);
-    expect(actual.steps.size).toBe(0);
+    expect(actual.steps).toHaveLength(0);
   });
   describe("AddRecipeStep", () => {
     test("Should add RecipeStep to recipe", () => {
@@ -27,10 +26,9 @@ describe("Recipe", () => {
       recipe.addRecipeStep(step);
 
       //Assert
-      expect(recipe.graph.hasNode(step.id)).toBe(true);
-      expect(recipe.steps.has(step.id)).toBe(true);
+      expect(recipe.steps).toContain(step);
     });
-    test("Should throw Error if linked step does not exist", () => {
+    test("Should throw Error if index is invalid", () => {
       //Assemble
       const step: RecipeStep = {
         details: "",
@@ -40,366 +38,51 @@ describe("Recipe", () => {
       const recipe = new Recipe();
 
       //Act
-      expect(() => recipe.addRecipeStep(step, ["fake ID"])).toThrowError();
-      expect(() => recipe.addRecipeStep(step, [], ["fake ID"])).toThrowError();
+      expect(() => recipe.addRecipeStep(step, -5)).toThrowError();
+      expect(() => recipe.addRecipeStep(step, 5)).toThrowError();
     });
-
-    test("Should add predecessor step", () => {
+    test("Should add step at index", () => {
       //Assemble
-      const predecessor: RecipeStep = {
+      const first: RecipeStep = {
         details: "",
         id: uuidv4(),
-        title: "predecessor",
+        title: "first",
       };
       const recipe = new Recipe();
-      const target: RecipeStep = {
+      const third: RecipeStep = {
         details: "",
         id: uuidv4(),
-        title: "target",
+        title: "third",
       };
-      recipe.addRecipeStep(predecessor);
+      recipe.addRecipeStep(first);
+      recipe.addRecipeStep(third);
+      const second: RecipeStep = {
+        details: "",
+        id: uuidv4(),
+        title: "third",
+      };
 
       //Act
-      recipe.addRecipeStep(target, [predecessor.id]);
+      recipe.addRecipeStep(second, 1);
 
       //Assert
-      expect(recipe.graph.predecessors(target.id)).toContain(predecessor.id);
-    });
-
-    test("Should add successor step", () => {
-      //Assemble
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      const recipe = new Recipe();
-      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
-      recipe.addRecipeStep(successor);
-
-      //Act
-      recipe.addRecipeStep(target, [], [successor.id]);
-
-      //Assert
-      expect(recipe.graph.successors(target.id)).toContain(successor.id);
-    });
-  });
-  describe("AddRecipeStepOnEdge", () => {
-    test("Should add step", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
-
-      //Act
-      recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
-
-      //Assert
-      expect(recipe.graph.hasNode(target.id)).toBe(true);
-      expect(recipe.steps.has(target.id)).toBe(true);
-    });
-    test("Should remove existing edge", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
-
-      //Act
-      recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
-
-      //Assert
-      expect(recipe.graph.hasEdge(predecessor.id, successor.id)).toBe(false);
-    });
-    test("Should create edges to previously joined steps", () => {
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
-
-      //Act
-      recipe.addRecipeStepOnEdge(target, predecessor.id, successor.id);
-
-      //Assert
-      expect(recipe.graph.predecessors(target.id)).toContain(predecessor.id);
-      expect(recipe.graph.successors(target.id)).toContain(successor.id);
-    });
-    test("Should throw error if edge does not exist", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-
-      //Act
-      expect(() =>
-        recipe.addRecipeStepOnEdge(step, "fake predecessor", "fake successor")
-      ).toThrowError();
-    });
-  });
-  describe("LinkSteps", () => {
-    test("Should create edge between existing steps", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-
-      //Act
-      recipe.linkSteps(predecessor.id, successor.id);
-
-      //Assert
-      expect(recipe.graph.hasEdge({ v: predecessor.id, w: successor.id })).toBe(
-        true
-      );
-    });
-    test("Should throw error if step does not exist", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-
-      //Act
-      recipe.linkSteps(predecessor.id, successor.id);
-
-      //Assert
-      expect(() => recipe.linkSteps("fake step", successor.id)).toThrowError();
-      expect(() =>
-        recipe.linkSteps(predecessor.id, "fake step")
-      ).toThrowError();
-    });
-  });
-  describe("UnlinkSteps", () => {
-    test("Should remove edge between existing steps", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor, [predecessor.id]);
-
-      //Act
-      recipe.unlinkSteps(predecessor.id, successor.id);
-
-      //Assert
-      expect(recipe.graph.hasEdge(predecessor.id, successor.id)).toBe(false);
-    });
-    test("Should throw error if step does not exist", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-
-      //Act
-      expect(() =>
-        recipe.unlinkSteps(predecessor.id, "fake step")
-      ).toThrowError();
-    });
-    test("Should throw error if edge does not exist", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor);
-
-      //Act
-      expect(() =>
-        recipe.unlinkSteps(predecessor.id, successor.id)
-      ).toThrowError();
-    });
-  });
-  describe("SetStepsLinks", () => {
-    test("Should remove predecessor if not in newPredecessorIds", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-      recipe.addRecipeStep(step, [predecessor.id]);
-
-      //Act
-      recipe.setStepsLinks(step.id, [], []);
-
-      //Assert
-      expect(recipe.graph.hasEdge(predecessor.id, step.id)).toBe(false);
-    });
-    test("Should remove successor if not in newSuccessorIds", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor);
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-      recipe.addRecipeStep(step, [], [successor.id]);
-
-      //Act
-      recipe.setStepsLinks(step.id, [], []);
-
-      //Assert
-      expect(recipe.graph.hasEdge(step.id, successor.id)).toBe(false);
-    });
-    test("Should add predecessor if in newPredecessorIds", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      recipe.addRecipeStep(predecessor);
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-      recipe.addRecipeStep(step);
-
-      //Act
-      recipe.setStepsLinks(step.id, [predecessor.id], []);
-
-      //Assert
-      expect(recipe.graph.hasEdge(predecessor.id, step.id)).toBe(true);
-    });
-    test("Should add successor if in newSuccessorIds", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(successor);
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-      recipe.addRecipeStep(step);
-
-      //Act
-      recipe.setStepsLinks(step.id, [], [successor.id]);
-
-      //Assert
-      expect(recipe.graph.hasEdge(step.id, successor.id)).toBe(true);
-    });
-    test("Should not throw error when there are no predecessors or successors", () => {
-      //Assemble
-      const recipe = new Recipe();
-      const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
-      recipe.addRecipeStep(step);
-
-      //Act
-      const act = () => recipe.setStepsLinks(step.id, [], []);
-
-      //Assert
-      expect(act).not.toThrow();
+      expect(recipe.steps).toContain(second);
+      expect(recipe.steps[1]).toBe(second);
     });
   });
   describe("RemoveRecipeStep", () => {
-    test("Should remove RecipeStep", () => {
+    test("Should remove and return RecipeStep", () => {
       //Assemble
       const step: RecipeStep = { details: "", id: uuidv4(), title: "title" };
       const recipe = new Recipe();
       recipe.addRecipeStep(step);
 
       //Act
-      recipe.removeRecipeStep(step.id);
+      const actual = recipe.removeRecipeStep(step.id);
 
       //Assert
-      expect(recipe.graph.hasNode(step.id)).toBe(false);
-      expect(recipe.steps.has(step.id)).toBe(false);
-    });
-    test("Should link preceeding and subsequent steps", () => {
-      //Assemble
-
-      const recipe = new Recipe();
-      const predecessor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "predecessor",
-      };
-      const target: RecipeStep = { details: "", id: uuidv4(), title: "target" };
-      const successor: RecipeStep = {
-        details: "",
-        id: uuidv4(),
-        title: "successor",
-      };
-      recipe.addRecipeStep(predecessor);
-      recipe.addRecipeStep(target, [predecessor.id]);
-      recipe.addRecipeStep(successor, [target.id]);
-
-      //Act
-      recipe.removeRecipeStep(target.id);
-
-      expect(recipe.graph.successors(predecessor.id)).toContain(successor.id);
+      expect(recipe.steps).not.toContain(step);
+      expect(actual).toBe(step);
     });
     test("Should throw Error if RecipeStep does not exist", () => {
       //Assemble
@@ -414,6 +97,7 @@ describe("Recipe", () => {
       //Assemble
       const recipe = new Recipe();
       const ingredient: Ingredient = {
+        id: "1",
         name: "ingredient",
         notes: "",
         quantity: "",
@@ -428,6 +112,7 @@ describe("Recipe", () => {
     test("Should throw error if ingredient already exists", () => {
       const recipe = new Recipe();
       const ingredient: Ingredient = {
+        id: "1",
         name: "ingredient",
         notes: "",
         quantity: "",
@@ -443,6 +128,7 @@ describe("Recipe", () => {
       //Assemble
       const recipe = new Recipe();
       const ingredient: Ingredient = {
+        id: "1",
         name: "ingredient",
         notes: "",
         quantity: "",
@@ -468,6 +154,7 @@ describe("Recipe", () => {
       //Assemble
       const recipe = new Recipe();
       const ingredient: Ingredient = {
+        id: "1",
         name: "ingredient",
         notes: "",
         quantity: "",
