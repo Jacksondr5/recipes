@@ -1,0 +1,19 @@
+[
+  {
+    "Ingredients": [
+      {
+        "Id": "ea30c71f-2881-478a-a506-adef0eb0a001",
+        "Name": "test name",
+        "Notes": "test notes",
+        "Quantity": "3 cups"
+      }
+    ],
+    "Steps": [
+      {
+        "Id": "fdf4c685-5c22-4ad4-97c2-247efbc70d86",
+        "Details": "test details",
+        "Title": "test title"
+      }
+    ]
+  }
+]
