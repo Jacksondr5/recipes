@@ -14,6 +14,9 @@ import {
 
 export interface IngredientListProps {
   ingredients: IngredientChecklistItem[];
+  setIngredientList: React.Dispatch<
+    React.SetStateAction<IngredientChecklistItem[]>
+  >;
 }
 
 export interface IngredientChecklistItem {
@@ -40,7 +43,7 @@ const IngredientList: React.FunctionComponent<IngredientListProps> = (
   const classes = useStyles();
   return (
     <List className={classes.root}>
-      {props.ingredients.map((x) => {
+      {props.ingredients.map((x, i) => {
         const labelId = `checkbox-list-label-${x.ingredient.id}`;
         const primaryText = (
           <Typography display="inline" variant="h6">
@@ -56,6 +59,12 @@ const IngredientList: React.FunctionComponent<IngredientListProps> = (
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ "aria-labelledby": labelId }}
+                onChange={() =>
+                  props.setIngredientList((prevState) => {
+                    prevState[i].isChecked = !prevState[i].isChecked;
+                    return prevState;
+                  })
+                }
               />
             </ListItemIcon>
             <ListItemText

@@ -34,6 +34,7 @@ export const ingredientListProps: IngredientListProps = {
       isChecked: false,
     },
   ],
+  setIngredientList: () => 5,
 };
 
 export const NothingChecked = () => <IngredientList {...ingredientListProps} />;
@@ -63,6 +64,7 @@ const oneCheckedingredientListProps: IngredientListProps = {
       isChecked: false,
     },
   ],
+  setIngredientList: () => 5,
 };
 
 export const OneItemChecked = () => (
@@ -94,6 +96,7 @@ const allCheckedingredientListProps: IngredientListProps = {
       isChecked: true,
     },
   ],
+  setIngredientList: () => 5,
 };
 
 export const AllItemsChecked = () => (

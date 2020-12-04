@@ -1,5 +1,6 @@
 {
   "sonarlint.connectedMode.project": {
     "projectKey": "recipes"
-  }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -1,5 +1,6 @@
 [
   {
+    "Id": "bfbcbc32-b02b-4b07-af66-11dc8a0c421b",
     "Ingredients": [
       {
         "Id": "ea30c71f-2881-478a-a506-adef0eb0a001",
@@ -8,11 +9,36 @@
         "Quantity": "3 cups"
       }
     ],
+    "Name": "test name",
     "Steps": [
       {
         "Id": "fdf4c685-5c22-4ad4-97c2-247efbc70d86",
         "Details": "test details",
         "Title": "test title"
+      }
+    ]
+  },
+  {
+    "Id": "63514f02-782d-4d1d-879e-8dd2c7fd0968",
+    "Ingredients": [
+      {
+        "Id": "7bfa1eea-2c2e-4699-9550-72f41aa94dee",
+        "Name": "test name 2",
+        "Notes": "test notes 2",
+        "Quantity": "3 tablespoons"
+      }
+    ],
+    "Name": "test name 2",
+    "Steps": [
+      {
+        "Id": "2dd1ca3c-0e0d-4f1c-be7d-455dbb021099",
+        "Details": "test details 2",
+        "Title": "test title 2"
+      },
+      {
+        "Id": "cbafaa9f-b34f-4631-93fa-435d130c997d",
+        "Details": "test details 3",
+        "Title": "test title 3"
       }
     ]
   }

@@ -5,9 +5,13 @@ import { Ingredient } from "./Ingredient";
 export default class Recipe {
   private _ingredients: Ingredient[];
   private _steps: RecipeStep[];
+  public id: string;
+  public name: string;
   constructor() {
     this._ingredients = [];
     this._steps = [];
+    this.name = "";
+    this.id = "";
   }
 
   /**

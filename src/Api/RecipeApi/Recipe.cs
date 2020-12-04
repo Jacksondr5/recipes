@@ -5,7 +5,9 @@ namespace RecipeApi
 {
     public class Recipe
     {
+        public Guid Id { get; set; }
         public List<Ingredient> Ingredients { get; set; }
+        public string Name { get; set; }
         public List<RecipeStep> Steps { get; set; }
     }
 

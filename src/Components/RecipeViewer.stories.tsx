@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeViewer, { RecipeViewerProps } from "./RecipeStepViewer";
+import RecipeViewer, { RecipeViewerProps } from "./RecipeViewer";
 import { ingredientProps } from "./IngredientForm.stories";
 import { recipeStepProps } from "./RecipeStepForm.stories";
 import Recipe from "../Core/Recipe";
